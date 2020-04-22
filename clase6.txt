@@ -1,0 +1,92 @@
+use sakila;
+/*Ejercicio 1*/
+
+/*Opcion 1*/
+
+SELECT a1.first_name, a1.last_name, a2.first_name, a2.last_name 
+ FROM actor a1, actor a2 
+WHERE a1.last_name  = a2.last_name
+ and a1.actor_id <> a2.actor_id
+ORDER BY a1.first_name; 
+
+/*Opcion 2*/
+
+SELECT first_name,last_name
+ FROM actor a1
+WHERE EXISTS (SELECT a2.first_name, a2.last_name
+			   FROM actor a2 
+			  WHERE a1.last_name  = a2.last_name
+ 			   and a1.actor_id <> a2.actor_id)
+ORDER BY a1.first_name;
+
+/*Ejercicio 2*/
+
+
+SELECT first_name, last_name, actor_id
+ FROM actor 
+WHERE actor_id NOT IN(SELECT actor_id 
+			FROM film_actor fa);	
+
+
+
+/*Ejercicio 3*/
+SELECT first_name, last_name 
+ FROM customer 
+WHERE (SELECT COUNT(*) 
+	FROM rental r2, customer c 
+	WHERE c.customer_id = c.customer_id)=1;
+	
+
+/*Ejercicio 4*/
+	
+SELECT first_name, last_name 
+ FROM customer c
+WHERE (SELECT COUNT(*) 
+	FROM rental, customer c 
+	WHERE c.customer_id = c.customer_id)>1;
+/*Ejercicio 5*/
+
+
+
+
+
+/*Ejercicio 6*/
+
+SELECT fa.actor_id, a.first_name
+ FROM actor a, film f, film_actor fa 
+WHERE a.actor_id = fa.actor_id
+AND f.film_id = fa.film_id 
+	IN(SELECT film_id 
+		FROM film 
+	   	WHERE title = 'BETRAYED REAR')
+AND f.title <> 'CATCH AMISTAD'
+ORDER BY fa.actor_id ;
+
+
+/*Ejercicio 7*/
+
+SELECT DISTINCT fa.actor_id, a.first_name, a.last_name 
+ FROM actor a, film f, film_actor fa 
+WHERE a.actor_id = fa.actor_id
+AND f.film_id = fa.film_id 
+	IN(SELECT film_id 
+		FROM film 
+		WHERE title = 'BETRAYED REAR' OR title = 'CATCH AMISTAD')
+ORDER BY fa.actor_id ;
+
+
+/*Ejercicio 8*/
+
+SELECT first_name, last_name
+ FROM actor a
+WHERE actor_id NOT IN (SELECT actor_id 
+			FROM film_actor fa 
+			WHERE film_id IN (SELECT film_id 
+						FROM film 
+						WHERE title = 'BETRAYED REAR'))
+ AND actor_id NOT IN(SELECT actor_id 
+			FROM film_actor fa 
+			WHERE film_id IN (SELECT film_id 
+						FROM film 
+						WHERE title = 'CATCH AMISTAD'))
+ORDER BY first_name;

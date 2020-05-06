@@ -26,13 +26,4 @@ FROM customer c, address a
 WHERE c.address_id = a.address_id ;
 	
 
-SELECT first_name, last_name, a.address,
-       (SELECT DISTINCT amount 
-          FROM payment 
-         WHERE c.customer_id = payment.customer_id 
-           AND amount <= ALL (SELECT amount 
-                                FROM payment 
-                               WHERE c.customer_id = payment.customer_id))
-	   AS min_amount 
- FROM customer c, address a 
- WHERE  c.address_id = a.address_id;
+

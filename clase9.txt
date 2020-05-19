@@ -1,0 +1,50 @@
+use sakila;
+
+/*Ejercicio 1*/
+
+SELECT c.country_id, c2.country, count(*)
+ FROM city c, country c2
+ where c.country_id = c2.country_id 
+GROUP BY country_id
+
+
+
+/*Ejercicio 2*/
+SELECT c.country_id, c2.country, count(*)
+ FROM city c, country c2
+ where c.country_id = c2.country_id 
+GROUP BY country_id, c2.country
+ HAVING COUNT(*) > 10 
+ ORDER BY COUNT(*) DESC ;
+
+/*Ejercicio 3*/
+
+SELECT c.first_name, c.last_name, a.address,COUNT(r.inventory_id ) as 'peliculas totales',
+ (SELECT sum(amount)
+		FROM payment p
+		where p.customer_id =c.customer_id)as 'amount'
+ FROM customer c, address a, rental r 
+ where c.address_id = a.address_id
+ AND c.customer_id = r.customer_id
+ GROUP by c.customer_id
+order by amount DESC ;
+ 
+
+/*Ejercicio 4*/
+
+SELECT  c.name, AVG(f.`length` ) as 'Promedio duracion'
+ FROM film f, category c, film_category fc 
+ where f.film_id = fc.film_id 
+ and fc.category_id = c.category_id 
+ group by c.name 
+ORDER by  AVG(f.`length` ) DESC ;
+
+
+/*Ejercicio 5*/
+
+SELECT rating,  sum(p.amount )
+ FROM film f, inventory i, rental r, payment p
+ where f.film_id = i.film_id
+ and i.inventory_id = r.inventory_id 
+ and r.rental_id = p.rental_id 
+Group by rating; 

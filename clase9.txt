@@ -37,7 +37,8 @@ SELECT  c.name, AVG(f.`length` ) as 'Promedio duracion'
  where f.film_id = fc.film_id 
  and fc.category_id = c.category_id 
  group by c.name 
-ORDER by  AVG(f.`length` ) DESC ;
+ HAVING AVG(f.`length` ) > (SELECT AVG(`length` )FROM film f2) 
+ORDER by  AVG(f.`length` ) DESC;
 
 
 /*Ejercicio 5*/

@@ -1,0 +1,46 @@
+/*Ejercicio 4*/
+SELECT title , inventory.* 
+ FROM film f
+	LEFT join inventory 
+	USING (film_id)
+	where inventory_id is null; 
+
+/*Ejercicio 5*/
+
+SELECT title, inventory_id, rental_id
+ 	FROM film f
+	inner join inventory USING (film_id)
+	LEFT join rental  USING (inventory_id)
+	where rental_id is null;
+
+
+/*Ejercicio 6*/
+SELECT first_name, last_name, rental_date, return_date, s.store_id, title
+	FROM store s
+	inner join customer USING (store_id)
+	inner join rental USING (customer_id)
+	inner join inventory USING (inventory_id)
+	inner join film USING (film_id)
+	where rental.return_date is not null
+	order by store_id , last_name;
+	
+
+
+/*Ejercicio 7*/
+
+SELECT sum(amount), store_id, CONCAT(st.first_name , ' ' ,st.last_name, ' ' , city, ' ' ,country) as Nombre_ciudad
+	FROM payment p
+	inner join staff st on(p.staff_id = st.staff_id )
+	inner join store s USING (store_id)
+	inner join address a on( s.address_id = a.address_id)
+	inner join city USING (city_id)
+	inner join country USING(country_id)
+	group by store_id, Nombre_ciudad;
+
+/*Ejercicio 8*/
+
+SELECT count(*) as total, actor_id
+	FROM film
+	inner join film_actor USING(film_id)
+	group by actor_id
+	order by total desc;

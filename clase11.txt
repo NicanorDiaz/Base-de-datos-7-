@@ -20,7 +20,9 @@ SELECT first_name, last_name, rental_date, return_date, i.store_id, title
 	inner join rental USING (customer_id)
 	inner join inventory USING (inventory_id)
 	inner join film USING (film_id)
+	where rental.return_date is not null	
 	order by i.store_id , last_name;
+	
 	
 
 

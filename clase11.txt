@@ -28,14 +28,14 @@ SELECT first_name, last_name, rental_date, return_date, i.store_id, title
 
 /*Ejercicio 7*/
 
-SELECT sum(amount), store_id, CONCAT(st.first_name , ' ' ,st.last_name, ' ' , city, ' ' ,country) as Nombre_ciudad
+SELECT sum(amount)as Total, store_id, CONCAT(st.first_name , ' ' ,st.last_name, ' ' , city, ' ' ,country) as Nombre_y_ciudad
 	FROM payment p
 	inner join staff st on(p.staff_id = st.staff_id )
 	inner join store s USING (store_id)
 	inner join address a on( s.address_id = a.address_id)
 	inner join city USING (city_id)
 	inner join country USING(country_id)
-	group by store_id, Nombre_ciudad;
+	group by store_id, Nombre_y_ciudad;
 
 /*Ejercicio 8*/
 

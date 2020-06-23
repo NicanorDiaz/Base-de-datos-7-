@@ -44,3 +44,13 @@ SELECT count(*) as total, actor_id
 	inner join film_actor USING(film_id)
 	group by actor_id
 	order by total desc;
+	
+	
+-----Opcion Profe
+
+SELECT MAX(y.num)
+  FROM (SELECT COUNT(*) AS num, fa.actor_id 
+          FROM film
+          inner join film_actor fa USING(film_id)
+          inner join actor USING(actor_id)
+          group by fa.actor_id ) y;

@@ -1,0 +1,126 @@
+use sakila;
+
+/*Ejercicio 1*/
+
+INSERT INTO customer 
+(store_id, first_name, last_name, email, address_id, active, create_date, last_update)
+select 1, 'Teodoro', 'Reyna', 'teo.reyna@gmail.com', MAX(address_id) ,1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP 
+FROM address
+inner join city using(city_id)
+inner join country using(country_id)
+where country = 'United States';
+
+
+/*Ejercicio 2*/
+
+
+INSERT INTO rental 
+(rental_date, inventory_id, staff_id,  customer_id)
+select CURRENT_TIMESTAMP, max(inventory_id), max(sf.staff_id), max(customer.customer_id)
+from film f
+inner join inventory using(film_id)
+inner join store s using (store_id)
+inner join staff sf on (s.store_id = sf.store_id)
+inner join customer on (s.store_id = customer.store_id)
+where sf.store_id = 2
+and f.title = 'ACE GOLDFINGER';
+
+
+
+/*Ejercicio 3*/
+
+UPDATE film 
+set release_year = '1968'
+where rating = 'PG';
+
+UPDATE film 
+set release_year = '1987'
+where rating = 'G'
+
+UPDATE film 
+set release_year = '2003'
+where rating = 'NC-17'
+
+UPDATE film 
+set release_year = '1974'
+where rating = 'PG-13'
+
+UPDATE film 
+set release_year = '2017'
+where rating = 'R'
+
+
+
+/*Ejercicio 4*/
+	
+select f.title, r.*
+from film f
+inner join inventory using (film_id)
+inner join rental r using (inventory_id)
+where return_date IS NULL
+order by rental_id desc limit 1;
+
+
+
+UPDATE rental 
+SET rental_date = (SELECT rental_date 
+					FROM (select rental_date from rental) as agustin_venturi 
+					ORDER BY rental_id desc limit 1) 
+where rental_id = (SELECT Max(rental_id) FROM (SELECT rental_id from rental where return_date is null) as profe);
+
+
+
+/*Ejercicio 5*/
+
+DELETE FROM film 
+where title = 'FORREST SONS';
+
+DELETE FROM film_actor 
+where film_id = (SELECT film_id from film where title = 'FORREST SONS')
+
+DELETE FROM film_category
+where film_id = (SELECT film_id from film where title = 'FORREST SONS')
+
+DELETE FROM inventory 
+where film_id = (SELECT film_id from film where title = 'FORREST SONS')
+
+DELETE FROM rental 
+where inventory_id in (SELECT inventory_id 
+							from inventory inner join film using(film_id)
+							where title = 'FORREST SONS')	
+							
+select * from film f where title = 'FORREST SONS';
+
+
+
+/*Ejercicio 6*/
+
+
+INSERT INTO sakila.rental
+(rental_date, inventory_id, customer_id, staff_id)
+select(SELECT max(rental_date) from rental), 367, 
+		(SELECT max(customer_id) from customer 
+				inner join inventory using (store_id) where inventory_id = 367), 
+		(SELECT min(staff_id) from staff
+				inner join inventory using (store_id) where inventory_id = 367);
+
+
+INSERT INTO sakila.payment
+(customer_id, staff_id, rental_id, amount, payment_date)
+select customer_id, staff_id, rental_id, (SELECT AVG(amount) from payment), CURRENT_TIMESTAMP
+from rental where rental_date = (SELECT MAX(rental_date )from rental)
+	and inventory_id = 367
+	and customer_id = (SELECT max(customer_id) from customer 
+				inner join inventory using (store_id) where inventory_id = 367)
+	and staff_id = (SELECT min(staff_id) from staff
+				inner join inventory using (store_id) where inventory_id = 367);
+
+
+
+select * from rental r
+where rental_id not in(SELECT rental_id from rental r2 where return_date is null)
+limit 1;
+-- 367
+
+SELECT * from inventory i2 
+where inventory_id = 367;

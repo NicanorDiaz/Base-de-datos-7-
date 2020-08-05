@@ -1,0 +1,62 @@
+use sakila;
+
+/*Ejercicio 1*/
+
+SELECT CONCAT(cu.first_name,' ', cu.last_name) as 'Nombre y Apellido', a.address, ci.city
+FROM customer cu
+inner join address a using(address_id)
+inner join city ci  using(city_id)
+inner join country co using(country_id)
+where country = 'Argentina';
+
+/*Ejercicio 2*/
+SELECT f.title, l.name as 'Idioma', 
+	CASE f.rating WHEN 'G' THEN 'G (General Audiences) – All ages admitted.' 
+	WHEN 'PG' THEN 'PG (Parental Guidance Suggested) – Some material may not be suitable for children.' 
+	WHEN 'PG-13' THEN 'PG-13 (Parents Strongly Cautioned) – Some material may be inappropriate for children under 13.'
+	WHEN 'R' THEN 'R (Restricted) – Under 17 requires accompanying parent or adult guardian.'
+	WHEN 'NC-17' THEN 'NC-17 (Adults Only) – No one 17 and under admitted.'
+	END AS 'Rating'
+FROM film f 
+inner join `language` l using(language_id);
+
+/*Ejercicio 3*/
+
+SELECT f.title, f.release_year, CONCAT( a.first_name, ' ' ,a.last_name)
+FROM film f
+inner join film_actor fa using(film_id)
+inner join actor a using(actor_id)
+where UPPER(CONCAT_WS(' ',a.first_name, last_name)) = UPPER(TRIM(' penelope GUINESS')) ; 
+
+/*Ejercicio 4*/
+
+SELECT c.first_name, title, rental_date,
+IF(return_date is null, 'No', 'Yes') as 'Devuelta'
+from rental r
+	inner join customer c using(customer_id)
+	inner join inventory using(inventory_id)
+	inner join film f using(film_id)
+	where (MONTH (rental_date) = 5 or MONTH (rental_date) = 6);
+
+SELECT c.first_name, title, rental_date,
+IF(return_date is null, 'No', 'Yes') as 'Devuelta'
+from rental r
+	inner join customer c using(customer_id)
+	inner join inventory using(inventory_id)
+	inner join film f using(film_id)
+	where MONTHNAME(r.rental_date) in ('MAY', 'JUNE');
+
+
+/*Ejercicio 5*/
+
+
+SELECT CAST(return_date as char(4))
+from rental r;
+
+/*Ejercicio 6*/
+
+SELECT c.first_name, title, IFNULL(return_date, 'No devuelta') as 'No devuelta'
+from rental r
+	inner join customer c using(customer_id)
+	inner join inventory using(inventory_id)
+	inner join film f using(film_id);

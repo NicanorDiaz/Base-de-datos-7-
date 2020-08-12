@@ -1,0 +1,75 @@
+/*Ejercicio 1*/
+
+
+CREATE OR REPLACE VIEW list_of_customers as
+	SELECT CONCAT_WS(" ", customer_id, first_name), a.address, a.postal_code, a.phone, s.address_id, 
+	IF(c2.active= 1, 'Active', 'Inactive') as 'Activo'
+	FROM customer c2
+	inner join store s using(store_id)
+	inner join address a on c2.address_id = a.address_id 
+	inner join city using (city_id)
+	inner join country using (country_id);
+
+select * 
+from list_of_customers;
+
+/*Ejercicio 2*/
+
+CREATE OR REPLACE VIEW film_details AS
+	SELECT film_id, title, description, c.category_id, f.length, rating, 
+	GROUP_CONCAT(CONCAT_WS (' ', a.first_name, a.last_name ) SEPARATOR ', ' ) AS 'Actors'
+	from film f 
+	inner join film_category using(film_id)
+	inner join category c using(category_id)
+	inner join film_actor using(film_id)
+	inner join actor a using(actor_id)
+	GROUP BY film_id, title, description, c.category_id, f.length, rating;
+
+SELECT * from film_details ; 
+
+/*Ejercicio 3*/
+
+CREATE OR REPLACE VIEW sales_by_film_category AS
+SELECT c.name , count(p.payment_id) as 'Total'
+FROM payment p
+inner join rental using(rental_id)
+inner join inventory using(inventory_id)
+inner join film using(film_id)
+inner join film_category using(film_id)
+inner join category c using(category_id)
+GROUP by c.name
+
+select * from sales_by_film_category;
+
+
+
+/*Ejercicio 4*/
+CREATE VIEW actor_information AS
+SELECT a.first_name, a.last_name, a.actor_id, COUNT(f.film_id) as 'Cantidad de las peliculas'
+FROM actor a 
+inner join film_actor using (actor_id)
+inner join film f using (film_id)
+group by a.first_name, a.last_name, a.actor_id;
+
+SELECT * from actor_information ; 
+
+/*Ejercicio 5
+ * 
+ * Primero creamos la View con un Create View, le ponemos el nombre que querramos que tenga
+ * seguido de un AS para hacerle saber a la base de datos que ese será el nombre a referise por
+ * si lo queremos usar mas adelante. El ejercicio nos pide primero de saquemos todos los datos del
+ * actor, asique empezaremos desde la tabla actor. Pero antes de escribir el FROM necesitaremos un SELECT,
+ * dicho select tendra que tener las columnas Nombre, apellido y actor_id. El siguiente requisito del
+ * ejercicio es saber en cuantas peliculas totales actuo el actor. Primero tenemos que unir la tabla actor con
+ * la tabla film actor. Para eso utilizaremos film_actor como tabla intermedia, al ser una relacion 
+ * muchos-a-muchos(actor y film) se necesita la tabla film-actor. Asique tendríamos que hacer un 
+ * inner join a film-actor primero usando el actor_id, usamos este id porque ambas tablas comparten este dato.
+ * Luego repetimos el proceso desde film-actor hacia film. En film necesitamos saber la cantidad de peliculas 
+ * en las que actuo un actor, como no hay una columna con este tipo de dato tendremos que hacer un "Arreglo".
+ * Dicho arreglo sera un COUNT. Entonces la consulta nos qudaria: COUNT(actor_id). Para que la base de datos
+ * pueda funcionar necesita saber quien va a agrupar este dato COUNT. Debajo de los inner joins necesitamos 
+ * poner un GROUP BY, aquie pondremos todos los datos que no estan puestos en el count. Y asi tendremos todas
+ * las peliculas totales en las que actua un actor.
+ *  */
+
+/*Ejercicio 6*/

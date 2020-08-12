@@ -55,7 +55,7 @@ SELECT * from actor_information ;
 
 /*Ejercicio 5
  * 
- * Primero creamos la View con un Create View, le ponemos el nombre que querramos que tenga
+ * Primero creamos la View con un Create View o la reemplazamos con un Replace, le ponemos el nombre que querramos que tenga
  * seguido de un AS para hacerle saber a la base de datos que ese será el nombre a referise por
  * si lo queremos usar mas adelante. El ejercicio nos pide primero de saquemos todos los datos del
  * actor, asique empezaremos desde la tabla actor. Pero antes de escribir el FROM necesitaremos un SELECT,

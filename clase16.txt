@@ -1,0 +1,105 @@
+CREATE TABLE `employees` (
+  `employeeNumber` int(11) NOT NULL,
+  `lastName` varchar(50) NOT NULL,
+  `firstName` varchar(50) NOT NULL,
+  `extension` varchar(10) NOT NULL,
+  `email` varchar(100) NOT NULL,
+  `officeCode` varchar(10) NOT NULL,
+  `reportsTo` int(11) DEFAULT NULL,
+  `jobTitle` varchar(50) NOT NULL,
+  PRIMARY KEY (`employeeNumber`)
+);
+
+insert  into `employees`(`employeeNumber`,`lastName`,`firstName`,`extension`,`email`,`officeCode`,`reportsTo`,`jobTitle`) values 
+
+(1002,'Murphy','Diane','x5800','dmurphy@classicmodelcars.com','1',NULL,'President'),
+
+(1056,'Patterson','Mary','x4611','mpatterso@classicmodelcars.com','1',1002,'VP Sales'),
+
+(1076,'Firrelli','Jeff','x9273','jfirrelli@classicmodelcars.com','1',1002,'VP Marketing');
+
+
+/*Ejercicio 1*/
+
+INSERT INTO sakila.employees
+(employeeNumber, lastName, firstName, extension, email, officeCode, reportsTo, jobTitle)
+VALUES(789, 'Diaz', 'Nicanor', 'x5213', null, '1', null, 'Oficinista fachero');
+
+/*No me deja crearlo ya que a la hora de crear la tabla se especifica que email tiene que ser NOT NULL*/
+
+
+/*Ejercicio 2*/
+
+
+SELECT * FROM employees e;
+
+UPDATE employees SET employeeNumber = employeeNumber - 20
+
+/* Lo que hace es ir fila por fila y restalre al numero de employeeNumber 20
+ * ,al ser un int puede hacerse mientras no entre en conflicto con otros employeeNumber*/
+
+UPDATE employees SET employeeNumber = employeeNumber + 20
+/* 
+ * No puede hacer un UPDATE ya que por un momento habria 2 employeeNumber iguales y al ser una 
+ * Primary Key tiene que ser unico. Lo que hace este UPDATE es ir fila por fila actualizando + 20
+ * employeeNumber cuando llega a la segunda fila la base de datos le dice que no puede hacer eso
+ * ya que habria 2 PRIMARYS KEYS iguales asique rechaza la query*/
+
+/*Ejercicio 3*/
+
+ALTER TABLE employees 
+	ADD AGE INT NOT NULL;
+
+CREATE TRIGGER check_age BEFORE 
+INSERT ON employees
+FOR EACH ROW 
+	BEGIN 
+		IF NOT NEW.AGE BETWEEN 17 AND 70 THEN 
+		SIGNAL SQLSTATE '45000'
+		SET MESSAGE_TEXT = 'Error: Debe de ser mayor a 16 años y menor a 70';
+	END IF;
+	END;
+
+insert  into `employees`(`employeeNumber`,`lastName`,`firstName`,`extension`,`email`,`officeCode`,`reportsTo`,`jobTitle`,`AGE` ) values 
+(621,'YO','Diaz','X AE A-XII','123@gmail.com','1',NULL,'conserje, creo',63 )
+
+select * from employees e;
+
+/*Ejercicio 4*/
+/*Las tablas film y actor al tener una relacion muchos-muchos necesitan de una tabla intermedia.
+ Ambas tablase se estan referenciando mutuamente. Si hubiera un campo llamado actor en film, este debería 
+ de tener el ID que lo referencia a la tabla actor. Pero hay mas de un actor trabajando en una pelicula. Una 
+ foreign key debe de ser unica. Si ese es el caso se necesitaria 1 fila nueva por cada actor referenciado, 
+ lo que generaría una redundancia de datos.
+ */
+
+
+/*Ejercicio 5*/
+ALTER TABLE employees 
+	ADD last_update DATETIME DEFAULT NULL;
+
+CREATE TRIGGER keep_date_insert 
+before INSERT ON employees
+	FOR EACH ROW 
+		BEGIN 
+			SET NEW.last_update= NOW(); 
+		END;
+
+CREATE TRIGGER keep_date_update 
+BEFORE UPDATE ON employees
+	FOR EACH ROW 
+	BEGIN
+    	SET NEW.last_update= NOW();
+	END;	
+
+insert  into `employees`(`employeeNumber`,`lastName`,`firstName`,`extension`,`email`,`officeCode`,`reportsTo`,`jobTitle`,`AGE` ) values 
+(4,'Banquito','Esteban','sñpc-5','456@gmail.com','2',NULL,'almacen',36 )
+
+UPDATE employees SET lastName = 'Diaz Rivero' WHERE employeeNumber = 621;
+    
+
+/*Ejercicio 6*/
+
+SELECT * FROM film;
+SELECT * FROM actor a;
+SELECT * FROM film_actor fa;

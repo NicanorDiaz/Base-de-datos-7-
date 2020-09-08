@@ -1,0 +1,48 @@
+/*Ejercicio 1*/
+
+SELECT * FROM address a
+where postal_code like '%2%';
+/*Antes del FullText Postal_Code 4ms(+9ms)*/ /*Despues del FullText Postal_Code 4ms(+25ms)*/
+
+
+SELECT c.first_name, a.postal_code, r.return_date FROM inventory i
+INNER JOIN rental r USING (inventory_id)
+INNER JOIN customer c USING(customer_id)
+INNER JOIN address a USING(address_id)
+where return_date is NULL;
+/*Antes del FullText Postal_Code 19ms(+1ms)*/ /*Despues del FullText Postal_Code 17ms*/
+
+
+SELECT postal_code, co.country FROM address a
+INNER JOIN city using(city_id)
+INNER JOIN country co USING(country_id)
+where country in('Chile', 'Zambia', 'India','Argentina','Australia');
+/*Antes del FullText Postal_Code 5ms + 1ms*/ /*Despues del FullText Postal_Code 4ms(+1ms)*/
+
+ALTER TABLE address 
+	ADD FULLTEXT(postal_code);
+
+/*Ejercicio 2*/
+SELECT first_name,COUNT(f.film_id) FROM actor a 
+INNER JOIN film_actor USING(actor_id)
+INNER JOIN film f USING(film_id)
+GROUP BY first_name;
+
+SELECT last_name ,COUNT(f.film_id) FROM actor a 
+INNER JOIN film_actor USING(actor_id)
+INNER JOIN film f USING(film_id)
+GROUP BY last_name;
+
+/*La busqueda con last name es mas rapida porque este es un Index*/
+
+/*Ejercicio 3*/
+
+SELECT description FROM film f2
+where description like '%display%'; 
+
+ALTER TABLE film 
+	ADD FULLTEXT(description);
+
+SELECT description FROM film f
+where MATCH(description) AGAINST('Display');
+/*Match Against termina siendo mas rapido*/

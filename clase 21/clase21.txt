@@ -1,0 +1,57 @@
+Act2)
+	b) ping hola
+	c) config get *
+	d)CONFIG SET loglevel "notice" 
+	  CONFIG GET loglevel  
+Act3)
+	SET prueba experimento
+	GET prueba	
+	
+Act4) 
+	HSET tutorialfacha nombre apellido 35 Argentina
+	HGETALL tutorialfacha
+
+Act5)
+	LPUSH experimento cba
+	LPUSH experimento Half
+	LPUSH experimento Life
+	LPUSH experimento Half Life
+	LRANGE experimento 0 10   / *Mi no entender 0 10*/
+
+Act6) 
+	SADD experimentoAdds Halo
+	SADD experimentoAdds Caloduty
+	SADD experimentoAdds 123544
+	SMEMBERS experimentoAdds
+
+Act 7)
+	ZADD pruebaSortedSets 1 hola
+	ZADD pruebaSortedSets 2 chau
+	ZADD pruebaSortedSets 3 adio
+	ZRANGE pruebaSortedSets 0 10 WITHSCORES  
+
+Act 8) 
+	SUBSCRIBE nikProfe
+	PUBLISH nikProfe "hola que tal, xd"
+
+Act 9)
+	MULTI 
+	SET pruenbaT redis
+	GET pruenbaT
+	INCR visitors
+	
+Act 10)
+	Podes guardar la base de datos y creará un archivo .rdb 
+	en el directorio de Redis.
+	SAVE
+
+Act 11)
+	Sirve para saber el rendimiento de redis.
+	redis-benchmark -n 100000
+	redis-benchmark -h 127.0.0.1 -p 6379 -t set,lpush -n 100000 -q 
+
+Act 12)
+	
+
+	
+	

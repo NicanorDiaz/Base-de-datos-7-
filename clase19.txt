@@ -1,0 +1,24 @@
+/*Ejercicio 1*/
+CREATE USER data_analyst@'%' IDENTIFIED BY '123456';
+
+/*Ejercicio 2*/
+SHOW GRANTS FOR data_analyst@'%' ;
+
+GRANT SELECT, DELETE, UPDATE on *.* TO data_analyst@'%'  WITH GRANT OPTION;
+
+/*Ejercicio 3*/
+USE sakila;
+CREATE TABLE IF NOT EXISTS intento 
+/*SQL Error [1142] [42000]: CREATE command denied to user 'data_analyst'@'172.17.0.1' for table 'intento'*/
+
+
+/*Ejercicio 4*/
+UPDATE film 
+set title ='Mujercitas'
+where film_id = 1;
+/*SQL Error [1142] [42000]: TRIGGER command denied to user 'data_analyst'@'172.17.0.1' for table 'film'*/
+/*Pude hace un update en otras tablas, xd*/ 
+
+
+/*Ejercicio 5*/
+REVOKE UPDATE ON *.* FROM data_analyst@'%' ;

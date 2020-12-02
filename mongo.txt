@@ -1,0 +1,33 @@
+
+/*Act1*/
+db.film.find({Rating:'PG-13'}, {Title:1, 'Special Features':1})
+
+/*Act2*/
+db.film.distinct("Length")
+
+/*Act3*/
+db.film.find({'Replacement Cost':{$gt:'20.00', $lt:'24.00'}}, {Title:1, 'Rental Duration':1, 'Replacement Cost':1})
+
+/*Act4*/
+db.film.find({"Special Features":/Behind the Scenes/}, {Title:1, Category:1, Rating:1})
+
+
+/*Act5*/
+db.film.find({Title:'ZOOLANDER FICTION'}, {"Actors.First name":1, "Actors.Last name":1})
+
+/*Act6*/
+db.store.find({_id:1}, {Address:1, City:1, Country:1})
+
+/*Act7*/
+var by_rating = {};
+
+db.film.find({}).forEach((it) => {
+    if (by_rating[it.Rating] == undefined) {
+        by_rating[it.Rating] = []
+    }by_rating[it.Rating].push({'Title':it.Title,'Rating':it.Rating})
+});
+
+printjson(by_rating)
+
+
+/*Act8*/

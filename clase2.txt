@@ -1,0 +1,69 @@
+/* Parte 1*/
+create DATABASE imdb;
+
+USE imdb;
+
+/* Parte 2*/
+CREATE TABLE film (
+	film_id INT(11) PRIMARY KEY AUTO_INCREMENT,
+	title VARCHAR(30) NOT NULl,
+	description VARCHAR(50),
+	release_year YEAR
+);
+
+CREATE TABLE actor(
+	actor_id INT(11) NOT NULL AUTO_INCREMENT,
+	first_name VARCHAR(25),
+	last_name VARCHAR(30),
+	CONSTRAINT actor_pk PRIMARY KEY (actor_id)
+);
+
+CREATE TABLE film_actor(
+	actor_id INT(11),
+	film_id INT(11),
+	PRIMARY KEY(actor_id, film_id)
+);
+
+/* Parte 3*/
+
+ALTER TABLE film
+	ADD last_update DATETIME DEFAULT CURRENT_TIMESTAMP
+	AFTER release_year;
+
+ALTER TABLE actor
+	ADD last_update DATETIME DEFAULT CURRENT_TIMESTAMP
+	AFTER last_name;
+
+
+/* Parte 4*/
+
+ALTER TABLE film_actor ADD
+  CONSTRAINT fk_filmActor_film
+    FOREIGN KEY (film_id)
+    REFERENCES film (film_id);
+
+ALTER TABLE film_actor ADD
+  CONSTRAINT fk_filmActor_actor
+    FOREIGN KEY (actor_id)
+    REFERENCES actor (actor_id);
+
+/* Parte 5*/
+
+INSERT INTO actor (first_name, last_name)
+VALUES ('Joaqui', 'choker');
+
+INSERT INTO actor (first_name, last_name)
+VALUES ('Meryl', 'Streep');
+
+INSERT INTO film (title, description, release_year)
+VALUES ('CHoker', 'El jajas pero esta vez serio', '2019');
+
+INSERT INTO film_actor(actor_id, film_id)
+VALUES(1,1);
+
+INSERT INTO film_actor(actor_id, film_id)
+VALUES(2,1);
+
+SELECT * FROM film;
+SELECT * FROM actor;
+SELECT * FROM film_actor;
